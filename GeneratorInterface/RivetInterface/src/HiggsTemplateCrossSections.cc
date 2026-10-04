@@ -1159,13 +1159,8 @@ namespace Rivet {
     Histo1DPtr hist_isZ2vv;
   };
 
-  // the PLUGIN only needs to be decleared when running standalone Rivet
-  // and causes compilation / linking issues if included in Athena / RootCore
-  //check for Rivet environment variable RIVET_ANALYSIS_PATH
-#ifdef RIVET_ANALYSIS_PATH
-  // The hook for the plugin system
+  // Register the analysis when loaded as a CMSSW Rivet plugin.
   RIVET_DECLARE_PLUGIN(HiggsTemplateCrossSections);
-#endif
 
 }  // namespace Rivet
 
