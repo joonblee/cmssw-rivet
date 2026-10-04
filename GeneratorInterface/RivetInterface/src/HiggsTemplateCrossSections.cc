@@ -1164,7 +1164,7 @@ namespace Rivet {
   //check for Rivet environment variable RIVET_ANALYSIS_PATH
 #ifdef RIVET_ANALYSIS_PATH
   // The hook for the plugin system
-  DECLARE_RIVET_PLUGIN(HiggsTemplateCrossSections);
+  RIVET_DECLARE_PLUGIN(HiggsTemplateCrossSections);
 #endif
 
 }  // namespace Rivet
