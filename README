@@ -1,0 +1,215 @@
+# Running the Rivet CRAB submissions
+
+This repository contains the source files needed for the four submissions,
+plus optional event-weight tools. It is an overlay for CMSSW_14_2_0/src,
+not a full CMSSW checkout.
+Run submission commands from this directory: the scripts use relative paths.
+
+## Required files
+
+Keep the submission script and the files in its row:
+
+| Submission script | Directly required files |
+| --- | --- |
+| crab_submit_GEN-25-002_DY.py | rivet_GEN-25-002_DY_cfg.py |
+| crab_submit_GEN-25-002_tt.py | rivet_GEN-25-002_tt_cfg.py |
+| crab_submit_GEN-25-002_W.py | rivet_GEN-25-002_W_cfg.py |
+| crab_submit_NonIsoPheno.py | rivet_NonIsoPheno_cfg.py, run_rivet_crab.sh |
+
+Additional software/source dependencies:
+
+- A compatible CMSSW installation, CRABClient/CRABAPI, and CMS grid credentials.
+- GeneratorInterface/RivetInterface/: keep its source, interface, python,
+  data, and BuildFile.xml files to rebuild the local Rivet interface. The
+  configurations use RivetAnalyzer, MergedGenParticleProducer, and
+  GenParticles2HepMCConverter.
+- Rivet/: selected CMS analysis metadata/reference data and rivetSetup.sh.
+  The CMSSW release supplies the requested CMS, ATLAS, and MC analysis
+  implementations and external libraries.
+- NonIsoPheno additionally needs the custom RivetNonIsoPheno analysis.
+  RivetAnalysis/RivetNonIsoPheno.cc and .info provide the standalone plugin
+  route described below.
+  Rebuild the .so in the same CMSSW environment used by the jobs; an existing
+  binary from another environment may be incompatible.
+
+MyTools/Test/plugins/ is included for optional weight handling; see below.
+Only requested CMS analysis metadata/reference data are included under
+Rivet/SMP and Rivet/TOP. All nine corresponding sources were marked SKIP_FILES
+in the original checkout because CMSSW already supplies their implementations.
+Unrelated packages, duplicate custom-analysis sources, binaries, logs, CRAB
+work directories, and local event/output files are excluded.
+
+## Install into CMSSW
+
+On a CMS host with CVMFS, create a fresh release and copy this overlay into src:
+
+```bash
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+scram project CMSSW CMSSW_14_2_0
+git clone https://github.com/joonblee/cmssw-rivet.git
+cp -a cmssw-rivet/. CMSSW_14_2_0/src/
+cd CMSSW_14_2_0/src
+```
+
+## Set up and compile
+
+On a CERN/CMS host with CVMFS, start in CMSSW_14_2_0/src:
+
+```bash
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+eval "$(scram runtime -sh)"
+scram b -j 4
+source "$CMSSW_BASE/src/Rivet/rivetSetup.sh"
+source /cvmfs/cms.cern.ch/crab3/crab.sh
+voms-proxy-init --voms cms
+```
+
+The Python submission/configuration files do not need compilation. `scram b`
+builds the local CMSSW packages and Rivet analyses using their BuildFile.xml
+files. Check that the build finishes successfully before submitting.
+Re-source the Rivet setup in each new shell. It adds this checkout's analysis
+metadata/reference-data directories to Rivet's search paths.
+
+For the standalone NonIsoPheno plugin, from src:
+
+```bash
+rivet-build RivetNonIsoPheno.so RivetAnalysis/RivetNonIsoPheno.cc
+export RIVET_ANALYSIS_PATH="$PWD${RIVET_ANALYSIS_PATH:+:$RIVET_ANALYSIS_PATH}"
+export RIVET_INFO_PATH="$PWD/RivetAnalysis${RIVET_INFO_PATH:+:$RIVET_INFO_PATH}"
+rivet --list-analyses | rg RivetNonIsoPheno
+```
+
+For DY/W/tt, use `rivet --list-analyses` to check that all analysis names in the
+corresponding configuration are available. NonIsoPheno also requests MC_XS
+and HiggsTemplateCrossSections.
+
+## NonIsoPheno worker plugin
+
+Build RivetNonIsoPheno.so with the standalone command above before submission.
+The repository's NonIsoPheno script includes the wrapper, plugin, and .info in
+JobType.inputFiles. CRAB sends them to the worker sandbox; run_rivet_crab.sh
+adds the working directory to RIVET_ANALYSIS_PATH and runs
+`cmsRun -j FrameworkJobReport.xml PSet.py`. CRAB generates PSet.py.
+The .so is intentionally excluded from Git and must be rebuilt after cloning.
+
+## Submit to CRAB
+
+Review the active datasets, requestName, RunDate/workArea, and storageSite
+in each script before running. The current storage site is T3_KR_KNU.
+Use a fresh RunDate/workArea or unique request names when repeating submissions.
+
+Run the desired command(s) from src:
+
+```bash
+python3 crab_submit_GEN-25-002_DY.py
+python3 crab_submit_GEN-25-002_tt.py
+python3 crab_submit_GEN-25-002_W.py
+python3 crab_submit_NonIsoPheno.py
+```
+
+These commands submit real jobs. Each script calls crabCommand('submit') for
+its uncommented dataset blocks, potentially creating several tasks.
+Use Python execution for this multi-dataset workflow: requestName/inputDataset
+are filled inside the __main__ block, so `crab submit -c <script>` is not an
+equivalent invocation.
+
+DY/W/tt request maxEvents=-1 and one input file per job. NonIsoPheno currently
+runs a test: maxEvents=10000, unitsPerJob=1, totalUnits=1.
+All four request output.yoda as an output file.
+
+Monitor a task using its actual directory printed by submission:
+
+```bash
+crab status -d crablogRUNDATE/crab_REQUEST_NAME
+crab getlog -d crablogRUNDATE/crab_REQUEST_NAME
+crab getoutput -d crablogRUNDATE/crab_REQUEST_NAME
+```
+
+For NonIsoPheno the work-area prefix is crablog_NonIsoPheno, rather than crablog.
+
+## Optional local run
+
+CRAB fills the otherwise empty input list in the DY/W/tt configurations.
+For a local cmsRun test, provide a readable MiniAOD file in
+process.source.fileNames first. NonIsoPheno already contains a local DY file
+path; replace it if you want to test the QCD dataset used by its submission.
+
+After setup/build and, for NonIsoPheno, the plugin search-path exports above:
+
+```bash
+cmsRun rivet_GEN-25-002_DY_cfg.py maxEvents=100 yodafile=DY_test.yoda
+cmsRun rivet_GEN-25-002_tt_cfg.py maxEvents=100 yodafile=tt_test.yoda
+cmsRun rivet_GEN-25-002_W_cfg.py maxEvents=100 yodafile=W_test.yoda
+cmsRun rivet_NonIsoPheno_cfg.py maxEvents=100 yodafile=NonIsoPheno_test.yoda
+```
+
+Validation: the exported GeneratorInterface/RivetInterface and MyTools packages
+compiled successfully in a fresh CMSSW_14_2_0 release. The standalone
+RivetNonIsoPheno plugin also built successfully. No CRAB jobs were submitted
+and no dataset-level physics validation was performed.
+
+## Optional MyTools event weights
+
+Files: MyTools/Test/plugins/HepMCWeightUnityProducer.cc,
+HepMCWeightFilter.cc, and BuildFile.xml. They compile with the same `scram b`
+command above. This repository uses edm::HepMC3Product, matching the supplied
+GenParticles2HepMCConverter and RivetAnalyzer. The original workspace tools
+used HepMC2 products and could not connect to this HepMC3 chain directly.
+
+These tools modify/select existing generator weights; they do not calculate
+new matrix-element, PDF, or scale weights. The converter copies weights from
+GenEventInfoProduct (the input `generator` product) into the HepMC event.
+
+Choose one of these configurations in a rivet_*_cfg.py, replacing its existing
+process.p assignment. The default submission files keep original weights.
+
+### Replace the nominal event weight with one
+
+```python
+process.weightUnity = cms.EDProducer(
+    'HepMCWeightUnityProducer',
+    src=cms.InputTag('generator', 'unsmeared'),
+)
+process.rivetAnalyzer.HepMCCollection = cms.InputTag('weightUnity')
+process.p = cms.Path(
+    process.mergedGenParticles * process.generator *
+    process.weightUnity * process.rivetAnalyzer
+)
+```
+
+The producer reconstructs a separate HepMC3 event and sets weights[0] to 1.0
+(or creates it if the vector is empty). Additional weights are unchanged.
+Negative nominal weights also become +1; weighted NLO normalization therefore
+changes. To analyze only the nominal weight, use
+`process.rivetAnalyzer.skipMultiWeights = cms.bool(True)`.
+It does not modify the separate GenEventInfoProduct.
+
+### Reject events with a large absolute nominal weight
+
+```python
+process.weightFilter = cms.EDFilter(
+    'HepMCWeightFilter',
+    src=cms.InputTag('generator', 'unsmeared'),
+    maxWeight=cms.double(100.0),
+)
+process.rivetAnalyzer.HepMCCollection = cms.InputTag('generator', 'unsmeared')
+process.p = cms.Path(
+    process.mergedGenParticles * process.generator *
+    process.weightFilter * process.rivetAnalyzer
+)
+```
+
+The filter accepts abs(weights[0]) < maxWeight. Equality is rejected; an empty
+weight vector is treated as weight 1.0. Surviving weights stay unchanged.
+Use a positive threshold appropriate for the sample. Filtering changes the
+selected sample and its normalization. The commented filter example inherited
+from the workspace used generator::GEN; use generator:unsmeared as above,
+since this filter consumes the converted HepMC event.
+
+### Validate weight behavior
+
+Use a small readable MiniAOD input and run the optional local commands first.
+Compare the baseline and modified output.yoda histograms/counters, including
+MC_XS: unity weights should change nominal weighted sums; the filter should
+remove events at/above the selected absolute-weight threshold. Alternative
+weight streams are preserved unless skipMultiWeights is enabled.
