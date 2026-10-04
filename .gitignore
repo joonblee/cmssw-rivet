@@ -1,0 +1,12 @@
+*.so
+*.o
+*.pyc
+__pycache__/
+*.root
+*.yoda
+!**/data/*.yoda
+crablog*/
+crab.log
+FrameworkJobReport.xml
+PSet.py
+*.swp
