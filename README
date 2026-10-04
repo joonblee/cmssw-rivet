@@ -145,7 +145,8 @@ cmsRun rivet_NonIsoPheno_cfg.py maxEvents=100 yodafile=NonIsoPheno_test.yoda
 
 Validation: the exported GeneratorInterface/RivetInterface and MyTools packages
 compiled successfully in a fresh CMSSW_14_2_0 release. The standalone
-RivetNonIsoPheno plugin also built successfully. No CRAB jobs were submitted
+RivetNonIsoPheno plugin also built successfully. The exported HTXS analysis
+uses RIVET_DECLARE_PLUGIN so it registers with Rivet 4. No CRAB jobs were submitted
 and no dataset-level physics validation was performed.
 
 ## Optional MyTools event weights
