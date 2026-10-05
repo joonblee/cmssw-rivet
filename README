@@ -115,7 +115,8 @@ equivalent invocation.
 
 DY/W/tt request maxEvents=-1 and one input file per job. NonIsoPheno currently
 runs a test: maxEvents=10000, unitsPerJob=1, totalUnits=1.
-All four request output.yoda as an output file.
+All four request output.yoda as an output file. DY also requests
+output.weights.json and enables stored LHE variations; see the theory workflow below.
 
 Monitor a task using its actual directory printed by submission:
 
@@ -143,7 +144,7 @@ cmsRun rivet_GEN-25-002_W_cfg.py maxEvents=100 yodafile=W_test.yoda
 cmsRun rivet_NonIsoPheno_cfg.py maxEvents=100 yodafile=NonIsoPheno_test.yoda
 ```
 
-Validation: the exported GeneratorInterface/RivetInterface and MyTools packages
+Validation of the original overlay: the exported GeneratorInterface/RivetInterface and MyTools packages
 compiled successfully in a fresh CMSSW_14_2_0 release. The standalone
 RivetNonIsoPheno plugin also built successfully. The exported HTXS analysis
 uses RIVET_DECLARE_PLUGIN so it registers with Rivet 4. No CRAB jobs were submitted
@@ -214,3 +215,166 @@ Compare the baseline and modified output.yoda histograms/counters, including
 MC_XS: unity weights should change nominal weighted sums; the filter should
 remove events at/above the selected absolute-weight threshold. Alternative
 weight streams are preserved unless skipMultiWeights is enabled.
+
+## DY theory uncertainties
+
+The DY configuration now imports stored LHE weights and retains stored generator
+weights, including PS variations when the sample contains them. CRAB transfers
+output.yoda plus output.weights.json. The sidecar retains exact LHE IDs, raw XML
+weight definitions and generator descriptions. Variation names are now
+LHE_<id> and GEN_<index>_<cleaned description>; nominal is still the empty name.
+The shared analyser finalises once per job (rather than once per run), matches
+LHE values by ID, and rejects inconsistent layouts across input events/runs.
+The indexed generator names also apply to new W/tt/NonIsoPheno runs using this
+interface. Do not mix old/new outputs in one merge.
+
+Rebuild the interface with `scram b -j 4` before a local test or CRAB submission.
+The default LHE label is externalLHEProducer; source is tried as a fallback.
+Override the primary label with `lheCollection=<label>` if necessary. Samples
+without LHE weights are still analysed; the metadata marks LHE unavailable.
+To require LHE weights in a local configuration, set
+`process.rivetAnalyzer.allowMissingLHEWeights = cms.bool(False)`.
+Weights that were not generated/stored cannot be reconstructed by this workflow.
+Existing nominal-only YODA files need a new event-analysis run; no event
+generation is needed if the required weights exist in the input MiniAOD.
+
+The default preserveVariationRate=True explicitly passes the nominal cross
+section to Rivet's scalar API before finalisation, so
+sigma_i = sigma_nom * sumW_i / sumW_nom. Rivet 4 also rederives variation cross
+sections during finalisation; this makes the intended rate convention explicit
+in the interface and covers raw output when DoFinalize=False.
+The central cross section is unchanged. Analyses that explicitly normalise
+distributions to unit area still produce shape uncertainties, as intended.
+
+### Merge and calculate
+
+Work in the same CMSSW/Rivet environment used for the jobs. Python must be able
+to import yoda; automatic PDF treatment also requires lhapdf and the relevant
+installed set metadata. Keep ONE sample's downloaded job outputs in each folder.
+Use Rivet's equivalent-sample merge (`-e`), which merges raw accumulators and
+reruns finalisation; adding already normalised curves with yodamerge is not the
+equivalent operation. Check rivet-merge's log for skipped non-reentrant analyses.
+
+```bash
+scram b -j 4
+cmsRun rivet_GEN-25-002_DY_cfg.py maxEvents=100 yodafile=DY_test.yoda
+
+# After downloading the outputs from a new CRAB task:
+rivet-merge -e -o DY_merged.yoda downloaded_DY/output_*.yoda
+python3 theory_uncertainties.py --metadata downloaded_DY/*.json --list
+python3 theory_uncertainties.py DY_merged.yoda \
+    --metadata downloaded_DY/*.json --output DY_theory
+rivet-mkhtml DY_theory.yoda
+```
+
+The local cmsRun example requires an input file in process.source.fileNames.
+Use a new RunDate/workArea before resubmitting CRAB. This code change does not
+submit jobs. Pass ALL metadata sidecars for the sample; the script checks that
+their definitions agree. It cannot verify that you downloaded all CRAB jobs.
+
+If several complete PDF ensembles are present, select the one used for the
+nominal production with `--pdf-set <LHAPDF-set-name>`. This option also declares
+that the nominal histogram is member 0 if that member's weight was not stored.
+The script never assumes that a numerical LHE ID denotes a particular PDF member.
+Do not select an alternative PDF family and interpret its error as the nominal
+production PDF uncertainty without checking the corresponding central shift.
+
+Output files:
+
+- DY_theory.json: central values, MC statistical errors, separate absolute
+  down/up uncertainty components, total theory errors, availability and skipped
+  object types. LHAPDF's replica central values are also recorded for comparison
+  while the plotted curve retains the generator's nominal prediction.
+- DY_theory.csv: the same binwise central values and separate error components.
+- DY_theory.yoda: nominal curves with a combined theory band at the original
+  analysis paths, suitable for rivet-mkhtml. Add `--include-stat` to include
+  nominal MC statistical errors in the plotted band as well.
+
+### Prescriptions and incomplete inputs
+
+- ME scales: the conventional 7-point envelope (nominal plus six variations
+  with muR/muF factors 0.5, 1, 2, excluding 0.5/2 and 2/0.5). Automatic mode
+  requires a unique complete group and prefers explicit LHE streams over copies
+  carried in generator weights.
+- PDF: LHAPDF's 68.268949% CL prescription, using complete, correctly ordered
+  members. Replica and symmetric/asymmetric Hessian representations are
+  supported. Distinct PDF ensembles are alternatives and are not added together.
+- alpha_s: LHAPDF's separate parameter component for a supported PDF+alphas
+  set (including the legacy +as spelling), counted once. For a unique explicitly labelled standalone pair, use half
+  the absolute difference. This uses the stored alpha_s step: check that it
+  matches the intended uncertainty (commonly +/-0.001 about the central value).
+- PS: separate inclusive ISR and FSR envelopes using muR factors 0.5 and 2
+  when their descriptions/standard CMS aliases identify them. Reduced,
+  conservative and splitting-kernel variations are retained in YODA but are
+  not silently mixed into these envelopes. Tune, hadronisation and matching
+  uncertainties require their own samples or prescriptions.
+- The combined theory band adds the available independent components in
+  quadrature, separately for up/down. This is an explicit plotting convention,
+  not a statistical confidence interval for missing higher orders; use the
+  separate components for interpretations with other correlation assumptions.
+
+Missing or ambiguous groups are reported as unavailable, never zero uncertainty.
+For a strict production check, add
+`--require scale pdf alphas` (and `isr fsr` if those weights are expected).
+By default a partial band contains the available components and records all
+missing components. Missing histogram streams, incompatible binning, malformed
+headers and non-finite bins fail with an error rather than an invented value.
+Histo1D, Profile1D, Estimate1D, their numeric discrete-bin equivalents and
+Scatter2D are processed; unsupported dimensions
+and counters are listed in the report, and /RAW, /REF and /TMP objects are excluded.
+
+In particular, NNPDF31_nnlo_as_0118_mc_hessian_pdfas stores member 101 at
+alpha_s(MZ)=0.116 and member 102 at 0.120, i.e. +/-0.002. For a +/-0.001
+uncertainty, add `--alphas-rescale 0.5` under a linear-response assumption.
+The default factor is 1 and uses the actual stored variation step; this factor
+is recorded in the output group definitions. It applies to both combined
+PDF+alpha_s sets and standalone pairs. Source set metadata:
+https://lhapdfsets.web.cern.ch/current/NNPDF31_nnlo_as_0118_mc_hessian_pdfas/NNPDF31_nnlo_as_0118_mc_hessian_pdfas.info
+
+For generators with non-standard descriptions, provide `--groups groups.json`.
+It replaces automatic grouping and uses exact names from `--list`. For example
+(replace every illustrative name with the actual weight name):
+
+```json
+{
+  "scale": {"method": "envelope", "weights": ["SCALE_1", "SCALE_2", "SCALE_3", "SCALE_4", "SCALE_5", "SCALE_6"]},
+  "pdf": {"method": "symmhessian", "weights": ["PDF_EV1", "PDF_EV2"], "central": "", "confidence_level": 68.26894921370858},
+  "alphas": {"method": "half_difference", "weights": ["ALPHAS_DOWN", "ALPHAS_UP"], "rescale": 1.0},
+  "isr": {"method": "envelope", "weights": ["ISR_DOWN", "ISR_UP"]},
+  "fsr": {"method": "envelope", "weights": ["FSR_DOWN", "FSR_UP"]}
+}
+```
+
+The example's PDF member count is illustrative, not a valid ensemble to copy
+blindly. `replicas` excludes the central member and uses the sample STD about
+the replica mean. `symmhessian` uses one variation per eigenvector; `hessian`
+uses ordered +/- pairs and gives separate up/down errors. Set confidence_level
+to the source Hessian CL (e.g. 90) for conversion to one sigma. A manifest group
+with method `lhapdf`, set `<name>` and a full member-ordered weights list delegates
+to LHAPDF and separates alpha_s automatically. `rescale` lets a reviewed
+standalone alpha_s pair be converted to a different step under a linear-response
+assumption. The script rejects unknown names and reusing a variation in two groups.
+
+References: LHAPDF PDFSet::uncertainty and error-set metadata conventions:
+https://www.lhapdf.org/classLHAPDF_1_1PDFSet.html
+https://www.lhapdf.org/config.html
+Rivet 4 multiweight plotting:
+https://gitlab.com/hepcedar/rivet/-/blob/rivet-4.0.1/doc/tutorials/multiweights_plotting.md
+CMS standard Pythia PS weight definitions:
+https://github.com/cms-sw/cmssw/blob/CMSSW_14_2_0/Configuration/Generator/python/PSweightsPythia/PythiaPSweightsSettings_cfi.py
+
+### Validation
+
+```bash
+python3 -m unittest discover -s tests -v
+g++ -std=c++17 -Wall -Wextra -Werror -I. tests/test_weight_utils.cc -o /tmp/test_rivet_weight_utils
+/tmp/test_rivet_weight_utils
+```
+
+The Python suite includes a native YODA round-trip/bin-width test, run when
+the bindings are available, and analytical checks for replicas, Hessian CL
+conversion, scale-point selection, PS grouping, component combination and
+invalid inputs. The standalone C++ test covers signed event reweighting,
+reordered/missing/duplicate LHE IDs and metadata escaping. A full CMSSW rebuild
+and a small real-input cmsRun test are still required on a CMS host before large
+production; this revision has not submitted CRAB tasks or validated actual datasets.

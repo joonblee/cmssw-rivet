@@ -31,7 +31,7 @@ if __name__ == '__main__':
   config.Data.splitting = 'FileBased'
   config.Data.unitsPerJob = 1
   config.JobType.pyCfgParams = ['yodafile=output.yoda', 'maxEvents=-1']
-  config.JobType.outputFiles = ['output.yoda']
+  config.JobType.outputFiles = ['output.yoda', 'output.weights.json']
 
   #   ### 2016
   # 
@@ -307,7 +307,6 @@ if __name__ == '__main__':
   ## # config.Data.inputDataset   = '/DYto2L_M-50_TuneCP5_13p6TeV_pythia8/Run3Summer23BPixMiniAODv4-KeepSi_130X_mcRun3_2023_realistic_postBPix_v2-v3/MINIAODSIM'
   ## # config.Data.splitting = 'FileBased'
   ## # crabCommand('submit', config = config)
-
 
 
 

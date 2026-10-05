@@ -7,6 +7,8 @@ import FWCore.ParameterSet.VarParsing as VarParsing
 options = VarParsing.VarParsing ('standard')
 options.register('runOnly', '', VarParsing.VarParsing.multiplicity.singleton,VarParsing.VarParsing.varType.string, "Run only specified analysis")
 options.register('yodafile', 'output.yoda', VarParsing.VarParsing.multiplicity.singleton,VarParsing.VarParsing.varType.string, "Name of yoda output file")
+options.register('weightMetadata', 'output.weights.json', VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.string, "Generator/LHE weight definitions for uncertainty post-processing")
+options.register('lheCollection', 'externalLHEProducer', VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.string, "Primary LHE product label (source is also tried)")
 options.setDefault('maxEvents', 100)
 if(hasattr(sys, "argv")):
     options.parseArguments()
@@ -38,6 +40,10 @@ process.generator = cms.EDProducer("GenParticles2HepMCConverter",
 
 # run rivet
 process.load("GeneratorInterface.RivetInterface.rivetAnalyzer_cfi")
+process.rivetAnalyzer.useLHEweights = cms.bool(True)
+process.rivetAnalyzer.skipMultiWeights = cms.bool(False)
+process.rivetAnalyzer.LHECollection = cms.InputTag(options.lheCollection)
+process.rivetAnalyzer.WeightMetadataFile = cms.string(options.weightMetadata)
 
 if options.runOnly:
     process.rivetAnalyzer.AnalysisNames = cms.vstring(options.runOnly)

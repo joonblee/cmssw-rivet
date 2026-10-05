@@ -18,6 +18,7 @@
 
 #include <vector>
 #include <string>
+#include <utility>
 
 class RivetAnalyzer : public edm::one::EDAnalyzer<edm::one::WatchRuns, edm::one::SharedResources> {
 public:
@@ -45,10 +46,21 @@ private:
   std::string _selectMultiWeights;
   std::string _deselectMultiWeights;
   std::string _setNominalWeightName;
-  edm::EDGetTokenT<LHEEventProduct> _LHECollection;
-  edm::EDGetTokenT<GenEventInfoProduct> _genEventInfoCollection;
   edm::EDGetTokenT<GenLumiInfoHeader> _genLumiInfoToken;
-  edm::EDGetTokenT<LHERunInfoProduct> _lheRunInfoToken;
+  std::vector<edm::InputTag> _lheLabels;
+  std::vector<edm::EDGetTokenT<LHEEventProduct>> _lheEventTokens;
+  std::vector<edm::EDGetTokenT<LHERunInfoProduct>> _lheRunTokens;
+  std::vector<std::vector<std::pair<std::string, std::string>>> _runHeaders;
+  std::vector<std::pair<std::string, std::string>> _metadataHeaders;
+  std::vector<std::string> _lheWeightIds;
+  std::vector<std::string> _generatorWeightNames;
+  std::vector<std::string> _generatorOriginalNames;
+  std::string _weightMetadataFile;
+  std::string _selectedLHELabel;
+  bool _allowMissingLHEWeights;
+  bool _preserveVariationRate;
+  bool _hasLHEWeights = false;
+  double _nominalXsection = 0.;
   std::unique_ptr<Rivet::AnalysisHandler> _analysisHandler;
   bool _isFirstEvent;
   std::string _outFileName;
@@ -56,7 +68,6 @@ private:
   bool _doFinalize;
   const edm::InputTag _lheLabel;
   double _xsection;
-  std::vector<std::string> _weightNames;
   std::vector<std::string> _lheWeightNames;
   std::vector<std::string> _cleanedWeightNames;
   std::shared_ptr<HepMC3::GenRunInfo> runinfo;
