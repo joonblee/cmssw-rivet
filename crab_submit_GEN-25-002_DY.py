@@ -1,3 +1,5 @@
+from datetime import datetime
+
 # MG paper: generator comparisons
 ### python3 crab.py      # to submit multiple commands at once, rather use crab submit
 
@@ -5,7 +7,7 @@ import os
 from CRABClient.UserUtilities import config
 config = config()
 
-RunDate    = '251217_1157'
+RunDate = datetime.now().strftime('%y%m%d_%H%M%S')
 config.General.requestName = ''
 config.General.workArea    = 'crablog' + RunDate
 config.General.transferOutputs = True
@@ -35,11 +37,11 @@ if __name__ == '__main__':
 
   #   ### 2016
   # 
-  #   config.General.requestName = 'DY01234jets_13TeV-sherpa'
-  #   config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  #   config.Data.inputDataset   = '/DY01234jets_13TeV-sherpa/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM'
-  #   config.Data.splitting = 'FileBased'
-  #   crabCommand('submit', config = config)
+  # config.General.requestName = 'DY01234jets_13TeV-sherpa'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DY01234jets_13TeV-sherpa/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
   # 
   #   ## DYjetsto*_01234jets_Pt-0ToInf_13TeV-sherpa samples are in Rucio # cannot be used!!!
   # 
@@ -71,29 +73,29 @@ if __name__ == '__main__':
   # 
   #   ## No DYToMuMu*powheg-pythia8 sample
   # 
-  #   config.General.requestName = 'DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8'
-  #   config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  #   config.Data.inputDataset   = '/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1/MINIAODSIM'
-  #   config.Data.splitting = 'FileBased'
-  #   crabCommand('submit', config = config)
+  # config.General.requestName = 'DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
   # 
-  #   config.General.requestName = 'DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7'
-  #   config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  #   config.Data.inputDataset   = '/DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7/RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v2/MINIAODSIM'
-  #   config.Data.splitting = 'FileBased'
-  #   crabCommand('submit', config = config)
+  # config.General.requestName = 'DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7/RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v2/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
   # 
-  #   config.General.requestName = 'DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8'
-  #   config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  #   config.Data.inputDataset   = '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1/MINIAODSIM'
-  #   config.Data.splitting = 'FileBased'
-  #   crabCommand('submit', config = config)
+  # config.General.requestName = 'DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
   # 
-  #   config.General.requestName = 'DYJetsToEE_M-50_massWgtFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos'
-  #   config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  #   config.Data.inputDataset   = '/DYJetsToEE_M-50_massWgtFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos/RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1/MINIAODSIM'
-  #   config.Data.splitting = 'FileBased'
-  #   crabCommand('submit', config = config)
+  # config.General.requestName = 'DYJetsToEE_M-50_massWgtFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DYJetsToEE_M-50_massWgtFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos/RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
   # 
   #   ## Uncomment the following lines if you want to make DYJetsToMuMu MiNNLO plots
   # 
@@ -106,11 +108,11 @@ if __name__ == '__main__':
   #   #  #########################################################################
   #   #  ### 2016APV
   #   #
-  #   #  #config.General.requestName = 'DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7_2016APV'
-  #   #  #config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  #   #  #config.Data.inputDataset   = '/DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7/RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v2/MINIAODSIM'
-  #   #  #config.Data.splitting = 'FileBased'
-  #   #  #crabCommand('submit', config = config)
+  # config.General.requestName = 'DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7_2016APV'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7/RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v2/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
   #   #
   #   #  # /DYToEE_M-50_NNPDF31_TuneCP5_13TeV-powheg-pythia8/RunIISummer19UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v1/MINIAODSIM
   #   #  # /DYJetsToEE_M-50_massWgtFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos/RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v1/MINIAODSIM
@@ -119,23 +121,23 @@ if __name__ == '__main__':
   #   #
   #   #  ### 2017
   #   #
-  #   #  # config.General.requestName = 'DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8'
-  #   #  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  #   #  # config.Data.inputDataset   = '/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9_ext1-v1/MINIAODSIM'
-  #   #  # config.Data.splitting = 'FileBased'
-  #   #  # crabCommand('submit', config = config)
+  # config.General.requestName = 'DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9_ext1-v1/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
   #   #
-  #   #  # config.General.requestName = 'DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7_UL17'
-  #   #  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  #   #  # config.Data.inputDataset   = '/DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7/RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2/MINIAODSIM'
-  #   #  # config.Data.splitting = 'FileBased'
-  #   #  # crabCommand('submit', config = config)
+  # config.General.requestName = 'DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7_UL17'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7/RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
   #   #
-  #   #  # config.General.requestName = 'DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8'
-  #   #  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  #   #  # config.Data.inputDataset   = '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2/MINIAODSIM'
-  #   #  # config.Data.splitting = 'FileBased'
-  #   #  # crabCommand('submit', config = config)
+  # config.General.requestName = 'DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
   #   #
   #   #  # No sherpa sample for 17
   #   #  # config.General.requestName = 'DY01234jets_13TeV-sherpa'
@@ -144,17 +146,17 @@ if __name__ == '__main__':
   #   #  # config.Data.splitting = 'FileBased'
   #   #  # crabCommand('submit', config = config)
   #   #
-  #   #  # config.General.requestName = 'DYToEE_M-50_NNPDF31_TuneCP5_13TeV-powheg-pythia8'
-  #   #  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  #   #  # config.Data.inputDataset   = '/DYToEE_M-50_NNPDF31_TuneCP5_13TeV-powheg-pythia8/RunIISummer19UL17MiniAODv2-106X_mc2017_realistic_v9-v1/MINIAODSIM'
-  #   #  # config.Data.splitting = 'FileBased'
-  #   #  # crabCommand('submit', config = config)
+  # config.General.requestName = 'DYToEE_M-50_NNPDF31_TuneCP5_13TeV-powheg-pythia8'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DYToEE_M-50_NNPDF31_TuneCP5_13TeV-powheg-pythia8/RunIISummer19UL17MiniAODv2-106X_mc2017_realistic_v9-v1/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
   #   #
-  #   #  # config.General.requestName = 'DYJetsToEE_M-50_massWgtFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos'
-  #   #  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  #   #  # config.Data.inputDataset   = '/DYJetsToEE_M-50_massWgtFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos/RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2/MINIAODSIM'
-  #   #  # config.Data.splitting = 'FileBased'
-  #   #  # crabCommand('submit', config = config)
+  # config.General.requestName = 'DYJetsToEE_M-50_massWgtFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DYJetsToEE_M-50_massWgtFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos/RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
   #   #
   #   #  # config.General.requestName = 'DYJetsToMuMu_M-50_massWgtFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos'
   #   #  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
@@ -164,27 +166,27 @@ if __name__ == '__main__':
   #   #
   #   #  ### 2018
   #   #
-  #   #  # config.General.requestName = 'DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7_UL18'
-  #   #  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  #   #  # config.Data.inputDataset   = '/DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7/RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2/MINIAODSIM'
-  #   #  # config.Data.splitting = 'FileBased'
-  #   #  # crabCommand('submit', config = config)
+  # config.General.requestName = 'DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7_UL18'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7/RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
   # 
   #   # /DYToEE_M-50_NNPDF31_TuneCP5_13TeV-powheg-pythia8/RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-v1/MINIAODSIM is the only VALID powheg-pythia8 sample
-  #   config.General.requestName = 'DYToEE_M-50_NNPDF31_TuneCP5_13TeV-powheg-pythia8'
-  #   config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  #   config.Data.inputDataset   = '/DYToEE_M-50_NNPDF31_TuneCP5_13TeV-powheg-pythia8/RunIIAutumn18MiniAOD-NoPUEcalAging2023_102X_upgrade2018_realistic_v15-v1/MINIAODSIM'
-  #   config.Data.splitting = 'FileBased'
-  #   crabCommand('submit', config = config)
+  # config.General.requestName = 'DYToEE_M-50_NNPDF31_TuneCP5_13TeV-powheg-pythia8'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DYToEE_M-50_NNPDF31_TuneCP5_13TeV-powheg-pythia8/RunIIAutumn18MiniAOD-NoPUEcalAging2023_102X_upgrade2018_realistic_v15-v1/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
   #   #
   #   #  # No sherpa sample for 18
   # 
   #   # herwig matchbox sample only exists for 2018
-  #   config.General.requestName = 'DYToLL_NLO_5FS_TuneCH3_13TeV_matchbox_herwig7'
-  #   config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  #   config.Data.inputDataset   = '/DYToLL_NLO_5FS_TuneCH3_13TeV_matchbox_herwig7/RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1_ext1-v2/MINIAODSIM'
-  #   config.Data.splitting = 'FileBased'
-  #   crabCommand('submit', config = config)
+  # config.General.requestName = 'DYToLL_NLO_5FS_TuneCH3_13TeV_matchbox_herwig7'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DYToLL_NLO_5FS_TuneCH3_13TeV_matchbox_herwig7/RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1_ext1-v2/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
 
 
 
@@ -242,17 +244,17 @@ if __name__ == '__main__':
   ## # crabCommand('submit', config = config)
   ## ##
 
-  config.General.requestName = 'Run3-DYto2E-5Jets-2NLO3LO_MLL-40_TuneSherpaDef_13p6TeV_sherpaMEPS_2022postEE'
-  config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  config.Data.inputDataset   = '/DYto2E-5Jets-2NLO3LO_MLL-40_TuneSherpaDef_13p6TeV_sherpaMEPS/Run3Summer22EEMiniAODv4-130X_mcRun3_2022_realistic_postEE_v6-v2/MINIAODSIM'
-  config.Data.splitting = 'FileBased'
-  crabCommand('submit', config = config)
+  # config.General.requestName = 'Run3-DYto2E-5Jets-2NLO3LO_MLL-40_TuneSherpaDef_13p6TeV_sherpaMEPS_2022postEE'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DYto2E-5Jets-2NLO3LO_MLL-40_TuneSherpaDef_13p6TeV_sherpaMEPS/Run3Summer22EEMiniAODv4-130X_mcRun3_2022_realistic_postEE_v6-v2/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
 
-  config.General.requestName = 'Run3-DYto2E-5Jets-2NLO3LO_MLL-40_TuneSherpaDef_13p6TeV_sherpaMEPS_2023'
-  config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  config.Data.inputDataset   = '/DYto2E-5Jets-2NLO3LO_MLL-40_TuneSherpaDef_13p6TeV_sherpaMEPS/Run3Summer23MiniAODv4-130X_mcRun3_2023_realistic_v15-v2/MINIAODSIM'
-  config.Data.splitting = 'FileBased'
-  crabCommand('submit', config = config)
+  # config.General.requestName = 'Run3-DYto2E-5Jets-2NLO3LO_MLL-40_TuneSherpaDef_13p6TeV_sherpaMEPS_2023'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DYto2E-5Jets-2NLO3LO_MLL-40_TuneSherpaDef_13p6TeV_sherpaMEPS/Run3Summer23MiniAODv4-130X_mcRun3_2023_realistic_v15-v2/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
 
   # ## NoEvents
   # # config.General.requestName = 'Run3-DYJetsToMuMu_TuneCP5_13p6TeV_powhegMiNNLO-pythia8-photos'
@@ -262,17 +264,17 @@ if __name__ == '__main__':
   # # crabCommand('submit', config = config)
   # ##
 
-  config.General.requestName = 'Run3-DYJetsToMuMu_H2ErratumFix_TuneCP5_13p6TeV_powhegMiNNLO-pythia8-photos_PUAVE1'
-  config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  config.Data.inputDataset   = '/DYJetsToMuMu_H2ErratumFix_TuneCP5_13p6TeV-powhegMiNNLO-pythia8-photos/Run3Summer23MiniAODv4-PUAVE1_130X_mcRun3_2023_realistic_v15-v2/MINIAODSIM'
-  config.Data.splitting = 'FileBased'
-  crabCommand('submit', config = config)
+  # config.General.requestName = 'Run3-DYJetsToMuMu_H2ErratumFix_TuneCP5_13p6TeV_powhegMiNNLO-pythia8-photos_PUAVE1'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DYJetsToMuMu_H2ErratumFix_TuneCP5_13p6TeV-powhegMiNNLO-pythia8-photos/Run3Summer23MiniAODv4-PUAVE1_130X_mcRun3_2023_realistic_v15-v2/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
 
-  config.General.requestName = 'Run3-DYJetsToMuMu_H2ErratumFix_TuneCP5_13p6TeV_powhegMiNNLO-pythia8-photos_PUAVE10'
-  config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
-  config.Data.inputDataset   = '/DYJetsToMuMu_H2ErratumFix_TuneCP5_13p6TeV-powhegMiNNLO-pythia8-photos/Run3Summer23MiniAODv4-PUAVE10_130X_mcRun3_2023_realistic_v15-v2/MINIAODSIM'
-  config.Data.splitting = 'FileBased'
-  crabCommand('submit', config = config)
+  # config.General.requestName = 'Run3-DYJetsToMuMu_H2ErratumFix_TuneCP5_13p6TeV_powhegMiNNLO-pythia8-photos_PUAVE10'
+  # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate
+  # config.Data.inputDataset   = '/DYJetsToMuMu_H2ErratumFix_TuneCP5_13p6TeV-powhegMiNNLO-pythia8-photos/Run3Summer23MiniAODv4-PUAVE10_130X_mcRun3_2023_realistic_v15-v2/MINIAODSIM'
+  # config.Data.splitting = 'FileBased'
+  # crabCommand('submit', config = config)
 
   ## ## Status: Production
   ## # config.General.requestName = 'Run3-DYto2L-2Jets-EWK_MLL-50_TuneCP5_13p6TeV_madgraph-pythia8'
@@ -315,3 +317,27 @@ if __name__ == '__main__':
 
 
 
+
+  # Submit each campaign separately for the 13 TeV paper comparison.
+  for request_name, dataset in (
+      ('DY01234jets_13TeV-sherpa_Summer16', '/DY01234jets_13TeV-sherpa/RunIISummer16MiniAODv3-PUMoriond17_94X_mcRun2_asymptotic_v3-v2/MINIAODSIM'),
+      ('DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_UL16', '/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1/MINIAODSIM'),
+      ('DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7_UL16', '/DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7/RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v2/MINIAODSIM'),
+      ('DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_UL16', '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1/MINIAODSIM'),
+      ('DYJetsToEE_M-50_massWgtFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos_UL16', '/DYJetsToEE_M-50_massWgtFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos/RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1/MINIAODSIM'),
+      ('DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7_UL16APV', '/DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7/RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v2/MINIAODSIM'),
+      ('DYToEE_M-50_NNPDF31_TuneCP5_13TeV-powheg-pythia8_UL16APV', '/DYToEE_M-50_NNPDF31_TuneCP5_13TeV-powheg-pythia8/RunIISummer19UL16MiniAODAPV-106X_mcRun2_asymptotic_preVFP_v8-v1/MINIAODSIM'),
+      ('DYJetsToEE_M-50_massWgtFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos_UL16APV', '/DYJetsToEE_M-50_massWgtFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos/RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v1/MINIAODSIM'),
+      ('DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_UL17', '/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9_ext1-v1/MINIAODSIM'),
+      ('DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7_UL17', '/DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7/RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2/MINIAODSIM'),
+      ('DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_UL17', '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2/MINIAODSIM'),
+      ('DYToEE_M-50_NNPDF31_TuneCP5_13TeV-powheg-pythia8_UL17', '/DYToEE_M-50_NNPDF31_TuneCP5_13TeV-powheg-pythia8/RunIISummer19UL17MiniAODv2-106X_mc2017_realistic_v9-v1/MINIAODSIM'),
+      ('DYJetsToEE_M-50_massWgtFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos_UL17', '/DYJetsToEE_M-50_massWgtFix_TuneCP5_13TeV-powhegMiNNLO-pythia8-photos/RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2/MINIAODSIM'),
+      ('DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7_UL18', '/DYJetsToLL_M-50_TuneCH3_13TeV-madgraphMLM-herwig7/RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2/MINIAODSIM'),
+      ('DYToEE_M-50_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Autumn18', '/DYToEE_M-50_NNPDF31_TuneCP5_13TeV-powheg-pythia8/RunIIAutumn18MiniAOD-NoPUEcalAging2023_102X_upgrade2018_realistic_v15-v1/MINIAODSIM'),
+      ('DYToLL_NLO_5FS_TuneCH3_13TeV_matchbox_herwig7_UL18', '/DYToLL_NLO_5FS_TuneCH3_13TeV_matchbox_herwig7/RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1_ext1-v2/MINIAODSIM'),
+  ):
+    config.General.requestName = request_name
+    config.Data.outputDatasetTag = config.General.workArea + '___' + request_name + '___' + RunDate
+    config.Data.inputDataset = dataset
+    crabCommand('submit', config=config)
