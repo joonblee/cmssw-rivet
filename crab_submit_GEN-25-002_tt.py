@@ -31,7 +31,7 @@ if __name__ == '__main__':
   config.Data.splitting = 'FileBased'
   config.Data.unitsPerJob = 2
   config.JobType.pyCfgParams = ['yodafile=output.yoda', 'maxEvents=-1']
-  config.JobType.outputFiles = ['output.yoda']
+  config.JobType.outputFiles = ['output.yoda', 'output.weights.json']
 
   # config.General.requestName = 'TT_TuneCH3_13TeV-powheg-herwig7'
   # config.Data.outputDatasetTag = config.General.workArea + '___' + config.General.requestName + '___' + RunDate 

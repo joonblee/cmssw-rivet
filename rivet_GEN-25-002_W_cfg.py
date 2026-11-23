@@ -38,6 +38,8 @@ process.generator = cms.EDProducer("GenParticles2HepMCConverter",
 
 # run rivet
 process.load("GeneratorInterface.RivetInterface.rivetAnalyzer_cfi")
+process.rivetAnalyzer.useLHEweights = cms.bool(True)
+process.rivetAnalyzer.WeightMetadataFile = cms.string("output.weights.json")
 
 if options.runOnly:
     process.rivetAnalyzer.AnalysisNames = cms.vstring(options.runOnly)

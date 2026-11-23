@@ -31,7 +31,7 @@ if __name__ == '__main__':
   config.Data.splitting = 'FileBased'
   config.Data.unitsPerJob = 1
   config.JobType.pyCfgParams = ['yodafile=output.yoda', 'maxEvents=-1']
-  config.JobType.outputFiles = ['output.yoda']
+  config.JobType.outputFiles = ['output.yoda', 'output.weights.json']
 
   # mg+py
   config.General.requestName = 'WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8_mcRun2'

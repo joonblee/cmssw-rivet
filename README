@@ -378,3 +378,30 @@ invalid inputs. The standalone C++ test covers signed event reweighting,
 reordered/missing/duplicate LHE IDs and metadata escaping. A full CMSSW rebuild
 and a small real-input cmsRun test are still required on a CMS host before large
 production; this revision has not submitted CRAB tasks or validated actual datasets.
+
+## Generator comparison and uncertainty component plots
+
+DY, W and tt CRAB submissions now request both the multiweight YODA and
+output.weights.json. Build the updated interface and use a new work area.
+Merge jobs and run theory_uncertainties.py separately for each sample as above.
+Use all sidecars for the sample (for example downloaded_DY/output*.json,
+which also matches CRAB-numbered files). Read the availability report before
+interpreting the combined band.
+
+With NumPy, Matplotlib and a checkout of CMS-GEN-25-002_paper:
+
+```bash
+plot=../CMS-GEN-25-002_paper/figure/generator_comparison/13TeV/CMS_2018_I1711625/d06-x01-y01.py
+python3 plot_an_theory.py "$plot" --list-samples > samples.json
+# Set the values in samples.json to paths to each sample's theory JSON,
+# relative to samples.json. Remove entries for curves without a report.
+python3 plot_an_theory.py "$plot" --samples samples.json --output theory_plots
+```
+
+Each report supplies the new central prediction, statistical errors and theory
+components for its exact curve label. Unmapped samples use the existing paper
+inputs. The comparison PDF shows the total theory band in both panels using
+the same visible-range scale factor as the sample's nominal. The component PDFs
+show positive up and negative down errors relative to the absolute nominal in
+percent, omitting zero-nominal bins. Results are grouped by analysis and
+observable. The combined shading excludes MC statistical errors.
